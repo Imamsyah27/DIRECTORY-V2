@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hayday Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>LENSTORE MANAGEMENT DASHBOARD</h1>
+</header>
+
+<nav class="dashboard-tabs">
+    <button class="tab active" data-dashboard="BEM">BEM</button>
+    <button class="tab" data-dashboard="LEM">LEM</button>
+    <button class="tab" data-dashboard="SEM">SEM</button>
+</nav>
+
+<section class="stats">
+
+    <div class="card">
+        <h3>Total</h3>
+        <span id="totalOrder">0</span>
+    </div>
+
+    <div class="card">
+        <h3>Proses</h3>
+        <span id="prosesOrder">0</span>
+    </div>
+
+    <div class="card">
+        <h3>Selesai</h3>
+        <span id="selesaiOrder">0</span>
+    </div>
+
+</section>
+
+<section class="input-section">
+    <input type="text" id="orderNumber" placeholder="Nama Pemesan">
+    <input type="text" id="hashtag" placeholder="Tagar">
+    <input type="text" id="whatsapp" placeholder="+628xxxx">
+    <input type="number" id="packageTotal" placeholder="Jumlah Paket">
+    <button id="addData">Tambah</button>
+</section>
+
+<section class="table-section">
+    <input
+    type="text"
+    id="searchInput"
+    placeholder="Cari nomor pesanan, tagar, atau WA"
+    style="
+        width:100%;
+        padding:12px;
+        margin-bottom:15px;
+    ">
+    <table id="dashboardTable">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama Pemesan</th>
+                <th>Tagar</th>
+                <th>Nomer WhatsApp</th>
+                <th>Jumlah Paket</th>
+                <th>Pengiriman Harian</th>
+                <th>Keterangan</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+    </table>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/checklist.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/app.js"></script>
+<script src="js/init.js"></script>
+</body>
+</html>
