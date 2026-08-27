@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4F46E5">
+<meta name="description" content="Lenstore Management Dashboard — kelola pesanan &amp; arsip dengan mudah">
+<title>Lenstore Management Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+    <header class="app-header">
+        <div class="brand">
+            <div class="brand-mark">LS</div>
+            <div class="brand-text">
+                <h1>Lenstore Management Dashboard</h1>
+                <span>Kelola pesanan &amp; pengiriman harian</span>
+            </div>
+        </div>
+
+        <nav class="page-nav" id="pageNav">
+            <button type="button" class="active" data-page="dashboard">
+                <span class="nav-icon">📊</span><span class="nav-label">Dashboard Aktif</span>
+            </button>
+            <button type="button" data-page="arsip">
+                <span class="nav-icon">🗂️</span><span class="nav-label">Data Arsip</span> <span class="badge-count" id="archiveCountBadge">0</span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- ============ VIEW: DASHBOARD AKTIF ============ -->
+    <section class="view active" id="view-dashboard">
+
+        <nav class="dashboard-tabs" id="dashboardTabs">
+            <button type="button" class="tab active" data-dashboard="BEM">BEM</button>
+            <button type="button" class="tab" data-dashboard="LEM">LEM</button>
+            <button type="button" class="tab" data-dashboard="SEM">SEM</button>
+        </nav>
+
+        <section class="stats">
+            <div class="stat-card total">
+                <div class="stat-top">
+                    <h3>Total Pesanan</h3>
+                    <div class="stat-icon">📦</div>
+                </div>
+                <span class="value" id="totalOrder">0</span>
+            </div>
+
+            <div class="stat-card proses">
+                <div class="stat-top">
+                    <h3>Proses</h3>
+                    <div class="stat-icon">⏳</div>
+                </div>
+                <span class="value" id="prosesOrder">0</span>
+            </div>
+
+            <div class="stat-card limit">
+                <div class="stat-top">
+                    <h3>Mendekati Limit</h3>
+                    <div class="stat-icon">⚠️</div>
+                </div>
+                <span class="value" id="limitOrder">0</span>
+            </div>
+
+            <div class="stat-card selesai">
+                <div class="stat-top">
+                    <h3>Selesai</h3>
+                    <div class="stat-icon">✅</div>
+                </div>
+                <span class="value" id="selesaiOrder">0</span>
+            </div>
+        </section>
+
+        <section class="panel input-section">
+            <div class="panel-title">➕ Tambah Pesanan Baru</div>
+            <div class="field-grid">
+                <div class="field">
+                    <label for="orderNumber">Nama Pemesan</label>
+                    <input type="text" id="orderNumber" placeholder="cth. Andi Saputra">
+                </div>
+                <div class="field">
+                    <label for="hashtag">Tagar / Kategori</label>
+                    <input type="text" id="hashtag" placeholder="cth. #lensbulanan">
+                </div>
+                <div class="field">
+                    <label for="whatsapp">Nomor WhatsApp</label>
+                    <input type="text" id="whatsapp" placeholder="+628xxxxxxxxxx">
+                </div>
+                <div class="field">
+                    <label for="packageTotal">Jumlah Paket (Limit)</label>
+                    <input type="number" id="packageTotal" placeholder="cth. 5" min="1">
+                </div>
+            </div>
+            <div style="margin-top:14px; display:flex; justify-content:flex-end;">
+                <button class="btn btn-primary" id="addData">Tambah Pesanan</button>
+            </div>
+        </section>
+
+        <section class="panel table-section">
+            <div class="panel-title">📋 Daftar Pesanan Aktif</div>
+
+            <div class="toolbar">
+                <div class="search-wrap">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Cari nama pemesan, tagar, atau nomor WA...">
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <table id="dashboardTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Pemesan</th>
+                            <th>Tagar</th>
+                            <th>WhatsApp</th>
+                            <th>Progress</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="state-block" id="tableLoadingState" style="display:none;">
+                <div class="spinner"></div>
+                <div class="state-title">Memuat data pesanan...</div>
+            </div>
+
+            <div class="state-block" id="tableEmptyState" style="display:none;">
+                <div class="state-icon">🗒️</div>
+                <div class="state-title">Belum ada pesanan aktif</div>
+                <div class="state-sub">Tambahkan pesanan baru lewat form di atas, atau ubah kata kunci pencarian Anda.</div>
+            </div>
+        </section>
+    </section>
+
+    <!-- ============ VIEW: DATA ARSIP ============ -->
+    <section class="view" id="view-arsip">
+
+        <section class="panel">
+            <div class="panel-title">🗂️ Data Arsip</div>
+            <p style="font-size:12.5px; color:var(--text-secondary); margin-top:-8px; margin-bottom:16px;">
+                Pesanan yang telah mencapai limit dan dipindahkan dari daftar aktif akan tersimpan di sini.
+            </p>
+
+            <div class="toolbar">
+                <div class="search-wrap">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="archiveSearchInput" placeholder="Cari di data arsip...">
+                </div>
+                <select class="filter-select" id="archiveFilterDashboard">
+                    <option value="ALL">Semua Dashboard</option>
+                    <option value="BEM">BEM</option>
+                    <option value="LEM">LEM</option>
+                    <option value="SEM">SEM</option>
+                </select>
+                <select class="filter-select" id="archiveSort">
+                    <option value="newest">Terbaru Diarsipkan</option>
+                    <option value="oldest">Terlama Diarsipkan</option>
+                    <option value="name">Nama A-Z</option>
+                </select>
+            </div>
+
+            <div class="archive-grid" id="archiveGrid"></div>
+
+            <div class="state-block" id="archiveEmptyState" style="display:none;">
+                <div class="state-icon">📭</div>
+                <div class="state-title">Belum ada data arsip</div>
+                <div class="state-sub">Pesanan yang sudah mencapai limit pengiriman bisa dipindahkan ke sini lewat tombol "Simpan ke Arsip".</div>
+            </div>
+        </section>
+    </section>
+
+</div>
+
+<!-- ============ MODAL ============ -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box" id="modalBox"></div>
+</div>
+
+<!-- ============ TOAST ============ -->
+<div id="toastStack"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/modal.js"></script>
+<script src="js/archive.js"></script>
+<script src="js/checklist.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/app.js"></script>
+<script src="js/init.js"></script>
+</body>
+</html>
